@@ -1,16 +1,15 @@
-# This is a sample Python script.
-
-# Press Shift+F10 to execute it or replace it with your code.
-# Press Double Shift to search everywhere for classes, files, tool windows, actions, and settings.
+import hikari  # installs the import we will need for making the bot
 
 
-def print_hi(name):
-    # Use a breakpoint in the code line below to debug your script.
-    print(f'Hi, {name}')  # Press Ctrl+F8 to toggle the breakpoint.
+class mainVirus:  # Making a class to wrap code cause organisation
+    def __init__(self):  # initialisation function
+        self.bot = None
 
+    def run(self):  # runs the program
+        pass
 
-# Press the green button in the gutter to run the script.
-if __name__ == '__main__':
-    print_hi('PyCharm')
-
-# See PyCharm help at https://www.jetbrains.com/help/pycharm/
+    def make_connection(self):  # makes a connection to the discord servers
+        try:  # I use a try method cause the person might not have an internet connection when computer booted
+            self.bot = hikari.GatewayBot(token="OTg1ODU1NTYwMDMxMjkzNDQy.GkeK8U.11OUYRHcS5Zevhu3B8QrMDZ6HdRgJZtDOZdEcY")  # I connect the bot to the discord servers using our bots token
+        except: # what to do if connection fails
+            self.make_connection()  # I run the program again if the connection fails
