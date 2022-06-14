@@ -13,3 +13,6 @@ class mainVirus:  # Making a class to wrap code cause organisation
             self.bot = hikari.GatewayBot(token="OTg1ODU1NTYwMDMxMjkzNDQy.GkeK8U.11OUYRHcS5Zevhu3B8QrMDZ6HdRgJZtDOZdEcY")  # I connect the bot to the discord servers using our bots token
         except: # what to do if connection fails
             self.make_connection()  # I run the program again if the connection fails
+
+    def readInput(self):
+        pass
