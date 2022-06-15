@@ -1,7 +1,6 @@
 import lightbulb, hikari, asyncio, os, random, socket, subprocess, \
-    sys, requests, json, pyautogui, datetime  # installs the import we will need for making the bot
+    sys, json, datetime  # installs the import we will need for making the bot
 from parser import Parser
-from requests_toolbelt.multipart.encoder import MultipartEncoder
 from pathlib import Path
 from PIL import ImageGrab
 import base64
