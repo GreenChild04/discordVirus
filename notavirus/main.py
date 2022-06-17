@@ -128,7 +128,7 @@ class MainVirus:  # Making a class to wrap code cause organisation
         if str(inpit).__contains__("<"):  # Checks if input is a command
             fun = inpit.strip("<")  # Removes the command initiator
             parsed = Parser(fun).run()  # Parses the input into data
-            self.funList[parsed[0]](parsed[1, event])  # Runs the command specified
+            self.funList[parsed[0]](parsed[1], event)  # Runs the command specified
             return "[running command]"  # Returns message - "[running command]"
         else:
             return out(inpit)  # Runs shell command and returns output
